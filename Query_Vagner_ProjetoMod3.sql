@@ -1,11 +1,14 @@
-select * from steam;
-select * from steam_requirements_data;
 
-select name, positive_ratings from steam where positive_ratings >  negative_ratings order by positive_ratings desc limit 10;
 
-select name as Nome, (average_playtime/60) as Tempo_Médio_jogado, positive_ratings as Notas_Positivas from steam where positive_ratings > negative_ratings order by Notas_Positivas DESC;
-select name as Nome, (median_playtime/60) as Horas_de_Jogo , positive_ratings as Notas_Positivas from steam where positive_ratings > negative_ratings order by Notas_Positivas desc;
+-- Questão 7: Mais jogados + Gênero
+select name as Nome,  (average_playtime/60)  as Tempo_Médio_jogado, genres 
+from steam 
+order by Tempo_Médio_Jogado DESC LIMIT 100;
 
-select count(platforms) as windows from steam where platforms like '%windows%';
-
-select name, steam_requirements_data.pc_requirements from steam left join steam_requirements_data on steam.appid = steam_requirements_data.steam_appid;
+-- Questão 8: Porcentagem de sistemas operacionais
+select ((w.Jogos_De_Windows*100)/3430) as Jogos_De_Windows, ((l.Jogos_De_Linux*100)/3430) as Jogos_De_Linux, ((m.Jogos_De_Mac*100)/3430) as Jogos_De_Mac
+from (select sum(w.Quantidade_de_Jogos) as Jogos_De_Windows from (select count(platforms) as Quantidade_De_Jogos from steam where platforms like '%windows%' group by platforms order by Quantidade_de_Jogos DESC) as w) as w
+left join (select sum(l.Quantidade_de_Jogos) as Jogos_De_Linux from (select count(platforms) as Quantidade_De_Jogos from steam where platforms like '%linux%' group by platforms order by Quantidade_de_Jogos DESC)as l) as l
+ON true
+left join (select sum(m.Quantidade_de_Jogos) as Jogos_De_Mac from (select count(platforms) as Quantidade_De_Jogos from steam where platforms like '%mac%' group by platforms order by Quantidade_de_Jogos DESC) as m) as m
+ON true;

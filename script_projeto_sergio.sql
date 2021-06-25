@@ -48,7 +48,7 @@ order by count(platforms);
 select genres, count(genres) as total from steam
 where publisher like 'ubisoft'
 group by genres
-order by count(genres) desc;
+order by count(genres) desc limit 10;
 
 select * from steam where publisher like 'ubisoft'
 order by positive_ratings desc;
@@ -76,6 +76,31 @@ where publisher like 'square enix'
 group by genres
 order by count(genres) desc;
 
+
+select genres, count(genres) as total from steam
+group by genres
+order by count(genres) desc limit 10;
+
+SELECT publisher,
+round(SUM(substring_index(owners, '-', -1)price), 2) AS TOT_GANHO,
+SUM(positive_ratings) AS TOT_AVA
+FROM steam
+GROUP BY publisher
+ORDER BY TOT_GANHO DESC LIMIT 10;
+
+select ((w.Jogos_De_Windows*100)/3430) as Jogos_De_Windows, ((l.Jogos_De_Linux*100)/3430) as Jogos_De_Linux, ((m.Jogos_De_Mac*100)/3430) as Jogos_De_Mac
+from (select sum(w.Quantidade_de_Jogos) as Jogos_De_Windows from (select count(platforms) as Quantidade_De_Jogos from steam where platforms like '%windows%' group by platforms order by Quantidade_de_Jogos DESC) as w) as w
+left join (select sum(l.Quantidade_de_Jogos) as Jogos_De_Linux from (select count(platforms) as Quantidade_De_Jogos from steam where platforms like '%linux%' group by platforms order by Quantidade_de_Jogos DESC)as l) as l
+ON true
+left join (select sum(m.Quantidade_de_Jogos) as Jogos_De_Mac from (select count(platforms) as Quantidade_De_Jogos from steam where platforms like '%mac%' group by platforms order by Quantidade_de_Jogos DESC) as m) as m
+ON true;
+
+SELECT publisher,
+ROUND(SUM(substring_index(owners, '-', -1) * price), 2) AS TOT_GANHO,
+SUM(positive_ratings) AS TOT_AVA
+FROM steam
+GROUP BY publisher
+ORDER BY TOT_GANHO DESC LIMIT 10;
 
 
 
